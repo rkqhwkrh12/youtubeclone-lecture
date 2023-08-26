@@ -19,7 +19,7 @@ const login = (req, res) => {
 app.use(logger);
 app.get("/", home);
 app.get("/login", login);
-
+console.log("Hello");
 
 
 const handleListening = () => console.log(`Server listening on port http://localhost:${PORT}`);
