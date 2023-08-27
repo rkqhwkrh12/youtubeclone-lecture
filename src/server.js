@@ -11,6 +11,7 @@ const logger = morgan("dev");
 app.use(logger);
 //express를 위한 middleware = morgan
 //morgan이 조금더 정교함 >> 다양한 정보를 얻을 수 있다. (path, status code, GET 등등)
+//router는 url이 어떻게 시작하는 지에 따라 나누는 방법.
 
 
 
