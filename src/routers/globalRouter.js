@@ -1,7 +1,7 @@
 import express from "express";
 
 //globalRouter에서 쓸 컨트롤러를 불러옴.
-import { join , login } from "../controllers/userController";
+import { join , login, logout } from "../controllers/userController";
 import { trending , search  } from "../controllers/videoController";
 //README에서 만든 라우터를 만드는 방법.
 //import { trending } from "../controllers/videoController";
@@ -19,6 +19,7 @@ globalRouter.get("/", trending);
 globalRouter.get("/join", join);
 globalRouter.get("/login", login);
 //login을 하는 건 user니까 user controller에 함수를 작성해야 겠지?
+globalRouter.get("/logout", logout);
 globalRouter.get("/search", search);
 //search하는 건 video니까 video controller에 함수를 작성해야 겠지?
 //export를 해줘야 server.js에서 handleHome함수를 사용할 수 있다.

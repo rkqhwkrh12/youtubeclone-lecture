@@ -13,18 +13,22 @@ app.use(logger);
 //morgan이 조금더 정교함 >> 다양한 정보를 얻을 수 있다. (path, status code, GET 등등)
 //router는 url이 어떻게 시작하는 지에 따라 나누는 방법.
 
+//console.log(process.cwd()); //현재 작업중인 환경을 보고 싶을 때 쓰면 됨.
+//현재 작업 디렉토리는 노드를 시작하는 디렉토리이다.
+
+//pug를 사용하는 이유 >> html을 매번 보낼 수가 없다. 그래서 pug로 보냄.
+//1. pug 설치
+//2. pug를 view 엔진으로 설정한다.
+//3. pug 파일을 생성한다.
 
 
+app.set("view engine", "pug"); //export나 import를 해줄 필요가 없다.
+                               //이코드를 통해서 express가 views 디렉토리에서 pug파일을 찾도록 설정되어 있기 때문에.
 
-
-
+app.set("views", process.cwd() + "/src/views");
 app.use("/", globalRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);
-
-
-
-
 
 
 
