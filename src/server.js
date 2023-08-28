@@ -8,7 +8,7 @@ import videoRouter from "./routers/videoRouter";
 const PORT = 4000;
 const app = express();
 const logger = morgan("dev"); 
-app.use(logger);
+
 //express를 위한 middleware = morgan
 //morgan이 조금더 정교함 >> 다양한 정보를 얻을 수 있다. (path, status code, GET 등등)
 //router는 url이 어떻게 시작하는 지에 따라 나누는 방법.
@@ -26,6 +26,9 @@ app.set("view engine", "pug"); //export나 import를 해줄 필요가 없다.
                                //이코드를 통해서 express가 views 디렉토리에서 pug파일을 찾도록 설정되어 있기 때문에.
 
 app.set("views", process.cwd() + "/src/views");
+app.use(logger);
+
+app.use(express.urlencoded({extended: true}));
 app.use("/", globalRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);
