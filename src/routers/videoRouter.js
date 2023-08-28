@@ -1,5 +1,5 @@
 import express from "express";
-import {watch, getEdit,upload,deleteVideo, postEdit} from "../controllers/videoController";
+import {watch, getEdit,deleteVideo, postEdit, getupload, postupload} from "../controllers/videoController";
 
 
 //video Router도 만들어 주구.
@@ -12,6 +12,6 @@ videoRouter.get("/:id(\\d+)", watch); //>> 변수명에 비디오는 필요없�
 videoRouter.route("/:id(\\d+)/edit").get(getEdit).post(postEdit);
 
 videoRouter.get("/:id(\\d+)/delete", deleteVideo);
-videoRouter.get("/upload", upload);
+videoRouter.route("/upload").get(getupload).post(postupload);
 
 export default videoRouter;

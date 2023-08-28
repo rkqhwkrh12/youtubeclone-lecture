@@ -55,7 +55,16 @@ export const postEdit = (req, res) => {
     return res.redirect(`/videos/${id}`);
 };
 export const search = (req, res) => res.send("Search");
-export const upload = (req, res) => res.send("Upload");
+
 export const deleteVideo = (req, res) => {
     return res.send("Delete Video");
 };
+
+export const  getupload = (req, res) => {
+    return res.render("upload");
+}
+
+export const postupload = (req, res) => {
+    //post video array
+    return res.redirect("/"); //홈으로 돌아감.
+}
