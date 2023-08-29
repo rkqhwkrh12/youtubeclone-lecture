@@ -7,7 +7,7 @@
     "url": "git+https://github.com/rkqhwkrh12/youtubeclone-lecture.git"
   },
   "scripts": {
-    "dev": "nodemon --exec babel-node src/server.js"
+    "dev": "nodemon --exec babel-node src/init.js"
   },
   "author": "bong",
   "license": "MIT",
