@@ -61,10 +61,21 @@ export const deleteVideo = (req, res) => {
 };
 
 export const  getupload = (req, res) => {
-    return res.render("upload");
+    return res.render("upload", {pageTitle: "Upload Video"});
 }
 
 export const postupload = (req, res) => {
     //post video array
+
+    const {title} =  req.body;
+    const newVideo = {
+        title,
+        rating: 0,
+        comments: 0,
+        createdAt: "just now",
+        views: 0,
+        id: videos.length + 1,
+    }
+    videos.push(newVideo);
     return res.redirect("/"); //홈으로 돌아감.
 }
