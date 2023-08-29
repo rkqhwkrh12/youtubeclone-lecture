@@ -1,11 +1,13 @@
+//server.js >> configuration에 관련된 코드만 처리하기 위해 만들어짐.
+
 import express from "express";
 import morgan from "morgan"; 
 import globalRouter from "./routers/globalRouter";
 import userRouter
  from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
-import "./db";
-const PORT = 4000;
+
+
 const app = express();
 const logger = morgan("dev"); 
 
@@ -33,13 +35,10 @@ app.use("/", globalRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);
 
+export default app
 
 
 
-const handleListening = () => console.log(`Server listening on port http://localhost:${PORT}`);
-
-
-app.listen(PORT, handleListening); 
 
 
 
