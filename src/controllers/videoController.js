@@ -49,16 +49,13 @@ export const postEdit = async (req, res) => {
         return res.render("404", {pageTitle: "Video not found."});
     }
     await Video.findByIdAndUpdate(id, {
-        title, description, hashtags: hashtags.split(",").map((word) => (word.startsWith("#") ? word : `#${word}`)),
+        title, description, hashtags: Video.formatHashtags(hashtags),
     })
     return res.redirect(`/videos/${id}`);
 
 };
 export const search = (req, res) => res.send("Search");
 
-export const deleteVideo = (req, res) => {
-    return res.send("Delete Video");
-};
 
 export const  getupload = (req, res) => {
     return res.render("upload", {pageTitle: "Upload Video"});
@@ -75,7 +72,7 @@ export const postupload = async (req, res) => {
    
             //,로 구분된 hashtag들을 split함수를 써서 , 로 분리를 하고 만약#가 없는게 있다면,
             //자동으로 #를 붙여준다.
-            hashtags: hashtags.split(",").map((word) => `#${word}`),
+            hashtags: Video.formatHashtags(hashtags),
            
         });
         //console.log(video); >> real data입력이 정상적으로 이루어 지고 있는지 확인하기 위한 코드
@@ -89,4 +86,13 @@ export const postupload = async (req, res) => {
 
     }
     
+}
+
+export const deleteVideo = async (req, res) => {
+    const { id } = req.params;
+
+    await Video.findByIdAndDelete(id);
+    //console.log(id);
+    //delete video
+    return res.redirect("/");
 }
