@@ -4,7 +4,7 @@ import globalRouter from "./routers/globalRouter";
 import userRouter
  from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
-
+import "./db";
 const PORT = 4000;
 const app = express();
 const logger = morgan("dev"); 
