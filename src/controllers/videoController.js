@@ -15,7 +15,7 @@ import Video from "../models/Video";
 */  
 
 export const home = async (req, res) => {
-    const videos = await Video.find({});
+    const videos = await Video.find({}).sort({ createdAt: "desc" });
  
     return res.render("home", {pageTitle: "Home", videos}); //render()안에 pug의 파일명을 넣어준다.
    
@@ -54,7 +54,8 @@ export const postEdit = async (req, res) => {
     return res.redirect(`/videos/${id}`);
 
 };
-export const search = (req, res) => res.send("Search");
+
+
 
 
 export const  getupload = (req, res) => {
@@ -80,7 +81,7 @@ export const postupload = async (req, res) => {
                                             //데이터를 database에 전송하는 데 시간이 걸리기때문에 무조건 해줘야 함.
         //console.log(dbVideo);
         return res.redirect("/"); //홈으로 돌아감.
-    } catch {
+    } catch (error) {
        
         return res.render("upload", {pageTitle: "Upload Video", errorMessage: error._message});
 
@@ -95,4 +96,21 @@ export const deleteVideo = async (req, res) => {
     //console.log(id);
     //delete video
     return res.redirect("/");
+}
+
+//>>사용자가 검색을 했을 때만 keyword값이 출력되고 검색하지 않으면 그냥 undefined로 나온다.
+export const search = async (req, res) => {
+    const { keyword } = req.query;
+    let videos = [];
+    if(keyword){
+        //search
+        videos = await Video.find({
+            title: {
+                $regex: new RegExp(`${keyword}$`, "i"),
+
+            },
+        });
+    }
+
+    return res.render("search", {pageTitle: "Search", videos});
 }
