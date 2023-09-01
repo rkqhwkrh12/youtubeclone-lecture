@@ -2,10 +2,15 @@
 
 import express from "express";
 import morgan from "morgan"; 
+import session from "express-session";
+import MongoStore from "connect-mongo";
 import rootRouter from "./routers/rootRouter";
 import userRouter
  from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
+import { localsMiddleware } from "./middlewares";
+
+
 
 
 const app = express();
@@ -31,6 +36,21 @@ app.set("views", process.cwd() + "/src/views");
 app.use(logger);
 
 app.use(express.urlencoded({extended: true}));
+app.use(
+    session({
+        secret: process.env.COOKIE_SECRET,
+        resave: false,
+        saveUninitialized: false, //log됐을 때만 세션이 생성되게
+        cookie: {
+            maxAge:20000,
+        },
+        store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
+
+    })
+);
+
+
+app.use(localsMiddleware); //무조건 session밑에 있어야 함.
 app.use("/", rootRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);

@@ -1,5 +1,5 @@
 import express from "express";
-import {edit, remove, logout, see} from "../controllers/userController";
+import {edit, remove, logout, see,startGithubLogin,finishGithubLogin} from "../controllers/userController";
 // ../의 의미 >> 지금 현재 있는 라우터 파일에서 나가겠다.
 //user Router도 만들어 주구.
 const userRouter = express.Router();
@@ -16,6 +16,8 @@ userRouter.get("/logout", logout);
 userRouter.get("/edit", edit);
 //edit이 주요작업이니까 get("", ); >> ""요기에 edit이 들어가면 되겠지?
 userRouter.get("/remove", remove);
+userRouter.get("/github/start", startGithubLogin);
+userRouter.get("/github/finish", finishGithubLogin);
 userRouter.get(":id", see);
 
 /*

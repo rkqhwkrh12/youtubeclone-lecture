@@ -1,5 +1,6 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
+import fetch from "node-fetch";
 
 
 
@@ -74,9 +75,61 @@ export const postLogin = async (req, res) => {
             errorMessage: "Wrong password",
         });
     }
+    //로그인이 됐는지 안됐는 지를 확인하기 위해서 req로 loggedIn을 DB에 삽입.
+    req.session.loggedIn = true;
+    req.session.user = user;
     //로그인 정보가 확인가능하다면
     return res.redirect("/");
 };
+
+
+export const startGithubLogin = (req, res) =>{
+    //login.pug에 있는 너무 긴 URL을 쪼개서 관리하기 편하게 만들기 위해서 다음과 같은 코드 작성.
+    const baseUrl = "https://github.com/login/oauth/authorize";
+    const config = {
+        client_id: process.env.GH_CLIENT,
+        allow_signup: false,
+        scope: "read:user user:email",
+    };
+    const params = new URLSearchParams(config).toString(); //congif에 있는 것들을 모두 합쳐 최종 Url을 만들어줌.
+    const finalUrl = `${baseUrl}?${params}`;
+    return res.redirect(finalUrl);
+};
+export const finishGithubLogin = async(req, res) => {
+    const baseUrl = "POST https://github.com/login/oauth/access_token";
+    const config = {
+        client_id: process.env.GH_CLIENT ,
+        client_secret: process.env.GH_SECRETE ,
+        code : req.query.code,  //로그인 버튼 클릭시에 생성됨.(Continue to Github)
+    };
+    const params = new URLSearchParams(config).toString(); //>>Url 생성
+    const finalUrl = `${baseUrl}?${params}`;
+    const tokenRequest =  await (await fetch(finalUrl, {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+        },
+    })).json();
+    //access_token이 들어있다면
+    if("access_token" in tokenRequest) {
+        const {access_token} = tokenRequest;
+        const userRequest = await (
+            await fetch("https://api.github.com/user", {
+                headers: {
+                    Authorization: `token ${access_token}`,
+                },
+            })
+        ).json();
+        console.log(userRequest);
+
+    } else{
+        return res.redirect("/login");
+    }
+ 
+
+
+};
+
 export const edit = (req, res) => res.send("Edit User");
 export const remove = (req, res) => res.send("Remove User"); 
 //자바스크립트 안에는 delete가 이미 지정되어 있음.
