@@ -1,7 +1,7 @@
 import express from "express";
 
 //globalRouter에서 쓸 컨트롤러를 불러옴.
-import { getJoin, login, logout, postJoin } from "../controllers/userController";
+import { getJoin, getLogin, logout, postJoin, postLogin } from "../controllers/userController";
 import { home , search } from "../controllers/videoController";
 //README에서 만든 라우터를 만드는 방법.
 //import { trending } from "../controllers/videoController";
@@ -17,7 +17,7 @@ const rootRouter = express.Router();
 
 rootRouter.get("/", home);
 rootRouter.route("/join").get(getJoin).post(postJoin);
-rootRouter.get("/login", login);
+rootRouter.route("/login").get(getLogin).post(postLogin);
 //login을 하는 건 user니까 user controller에 함수를 작성해야 겠지?
 rootRouter.get("/logout", logout);
 rootRouter.get("/search", search);
