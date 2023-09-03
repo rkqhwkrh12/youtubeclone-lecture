@@ -180,11 +180,12 @@ export const postEdit = async (req, res) => {
     //form에서 가져오기 >>req로 가져오면 된다.
     const {
         session: {
-            user: {_id}
+            user: {_id, avartarUrl},
         },
         body: {
             name, email, username, location
         },
+        file, //file이 undefine일수돌 잇음
     } =  req;
     //form에서 가져온 email, username과 DB에 저장된 email과 username을 비교하여 같은게 있으면 변경이 안되고
     //errorMessage가 나오게 한다.
@@ -203,6 +204,7 @@ export const postEdit = async (req, res) => {
     }
     const updateUser = await User.findByIdAndUpdate(_id,
         {
+            avartarUrl: file ? file.path : avartarUrl,
             name,
             email,
             username,

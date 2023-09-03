@@ -1,6 +1,6 @@
 import express from "express";
 import { see,logout,startGithubLogin,finishGithubLogin, getEdit, postEdit, getChangePassword, postChangePassword} from "../controllers/userController";
-import { protectorMiddleware, publicOnlyMiddleware } from "../middlewares";
+import { protectorMiddleware, publicOnlyMiddleware, uploadFiles } from "../middlewares";
 // ../의 의미 >> 지금 현재 있는 라우터 파일에서 나가겠다.
 //user Router도 만들어 주구.
 const userRouter = express.Router();
@@ -15,7 +15,7 @@ const handleDelete = (req, res) => res.send("Delete User");
 
 
 userRouter.get("/logout",protectorMiddleware ,logout);
-userRouter.route("/edit").all(protectorMiddleware).get(getEdit).post(postEdit);
+userRouter.route("/edit").all(protectorMiddleware).get(getEdit).post(uploadFiles.single("avatar"),postEdit);
 userRouter.get("/github/start",publicOnlyMiddleware , startGithubLogin);
 userRouter.get("/github/finish", publicOnlyMiddleware,finishGithubLogin);
 userRouter.route("/change-password").all(protectorMiddleware).get(getChangePassword).post(postChangePassword)

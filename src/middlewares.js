@@ -1,3 +1,6 @@
+import multer from "multer";
+
+
 export const localsMiddleware = (req, res, next) => {
 
     //res.locals를 사용하면 pug에서 바로 사용할 수 있다. >> 개꿀임.
@@ -28,3 +31,8 @@ export const publicOnlyMiddleware = (req, res, next) => {
         return res.redirect("/");
     }
 };
+
+//file이 업로드되면 uploads 폴더에 경로가 저장됨.
+export const uploadFiles = multer({
+    dest: "uploads/"
+});
