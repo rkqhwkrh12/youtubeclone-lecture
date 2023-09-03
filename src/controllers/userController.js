@@ -1,7 +1,7 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
-import userRouter from "../routers/userRouter";
+
 
 
 
@@ -20,6 +20,7 @@ export const postJoin = async (req, res) => {
             errorMessage: "Password confirmation does not match.",
         });
     }
+    //User가 이미 DB에 있다면 This username/email is already taken이 출력되게 한다.
     const exists =  await User.exists({
         //$or 오퍼레이터를 사용하면 배열안에 있는 여러조건 중 하나만 참이여도 조절할 수 있는 것을 만들수 있음.
         $or: [{username}, {email}]
@@ -58,7 +59,8 @@ export const postLogin = async (req, res) => {
     const { username, password } = req.body;
     const pageTitle = "Login";
     const user = await User.findOne({
-        username
+        username,
+        socialOnly: false //email로 로그인 했느지 안했는지를 알기 위해서
     });
     //로그인 정보가 없으면 다시 로그인 하라고 로그인 페이지를 렌더링 해줘야함.
     if(!user) {
@@ -96,6 +98,8 @@ export const startGithubLogin = (req, res) =>{
     const finalUrl = `${baseUrl}?${params}`;
     return res.redirect(finalUrl);
 };
+
+//github auth 설정창에서 callback url 정하는 부분에 있음.
 export const finishGithubLogin = async (req, res) => {
     const baseUrl = "https://github.com/login/oauth/access_token";
     const config = {
@@ -122,7 +126,9 @@ export const finishGithubLogin = async (req, res) => {
                 },
             })
         ).json();
-        console.log(userData);
+        //console.log(userData);
+        //user가 email을 보여주지 않을 때가 있음.
+        //그래서 email API에게도 요청을 보내줘야함
         const emailData = await(
             await fetch(`${apiUrl}/user/emails` , {
                 headers: {
@@ -137,37 +143,122 @@ export const finishGithubLogin = async (req, res) => {
         if(!emailObj) {
             return res.redirect("/login");
         }
-        const existingUser = await User.findOne({ email: emailObj.email});
-        if(existingUser) {
-            req.session.loggedIn = true;
-            req.session.user = existingUser;
-            return res.redirect("/");
-        } else {
-            const user = await User.create({
-                name: userData.name,
+        //email로 확인
+        let user = await User.findOne({ email: emailObj.email });
+        if(!user) {
+            //User 생성
+            //creat하고 ctrl+spacebar를 했을 때 목록이 나오는 이유 >> User.js에서 스키마로 데이터를 저장해 주었기 때문에(MonggoDB)
+            user = await User.create({
+                name:userData.name,
                 username: userData.login,
                 email: emailObj.email,
                 password: "",
-                socialOnly: true,
+                socialOnly: true, //github 로그인을 통해 만들어진 계정이란 뜻
                 location: userData.location,
-            });
+                avartarUrl: userData.avartarUrl,
+            }); 
+        }
+            //로그인하고 홈으로
             req.session.loggedIn = true;
             req.session.user = user;
             return res.redirect("/");
-
+        } else {
+            return res.redirect("/login");
         }
-      
- 
-    } else {
-        return res.redirect("/login");
-    }
 
 };
+export const logout = (req, res) => {
+    req.session.destroy();
+    return res.redirect("/");
+};
 
-export const edit = (req, res) => res.send("Edit User");
-export const remove = (req, res) => res.send("Remove User"); 
-//자바스크립트 안에는 delete가 이미 지정되어 있음.
+export const getEdit = (req, res) => {
+    return res.render("edit-profile", {pageTitle: "Edit Profile"});
+};
+export const postEdit = async (req, res) => {
+    //edit-profile에서 입력받은 form을 이용. >> 비디오가 수정되었을 때 이를 저장되게끔 만드는 거.
+    //form에서 가져오기 >>req로 가져오면 된다.
+    const {
+        session: {
+            user: {_id}
+        },
+        body: {
+            name, email, username, location
+        },
+    } =  req;
+    //form에서 가져온 email, username과 DB에 저장된 email과 username을 비교하여 같은게 있으면 변경이 안되고
+    //errorMessage가 나오게 한다.
+    const currentUser = req.session.user;
+    if((currentUser.email !== email) && (await User.exists({email}))){
+        return res.status(400).render("edit-profile", {
+            pageTitle,
+            errorMessage: "This email is already taken."
+        });
+    }
+    if((currentUser.username !== username) && (await User.exists({username}))){
+        return res.status(400).render("edit-profile", {
+            pageTitle,
+            errorMessage: "This username is already taken."
+        });
+    }
+    const updateUser = await User.findByIdAndUpdate(_id,
+        {
+            name,
+            email,
+            username,
+            location,
+        },
+        {new: true}
+    );
+    req.session.user = updateUser;
+    return res.redirect("/users/edit");
+};
 
-export const logout = (req, res) => res.send("Log out");
-export const see = (req, res) => res.send("See User");
+
+export const getChangePassword = (req, res) => {
+    //User가 로그인 되어 있을 때만 비밀번호를 변경할 수 있도록
+    if(req.session.user.socialOnly === true) {
+        return res.redirect("/");
+    }
+    return res.render("users/change-password", {
+        pageTitle: "Change Password"
+    });
+};
+
+export const postChangePassword = async (req, res) => {
+    //send notification >> change-password pug에 있는 비밀번호 변경과 관련된 form에서 값을 가져와서 코드를 작성.
+    //password 변경시 고려사항 >> 현재 비번을 확인하는 코드, 바뀐 비번을 확인 후 DB에 업데이트할때 hashing할 수 있는 지.
+    const {
+        session :{
+            user: {_id},
+        },
+        body: {oldPassword, newPassword, newPasswordConfirmation}
+    } = req;
+    const user = await User.findById(_id);
+    const ok = await bcrypt.compare(oldPassword, user.password);
+
+    if(!ok) {
+        return res.status(400).render("users/change-password", {
+            pageTitle: "Change Password",
+            errorMessage: "The current password is incorrect",
+        });
+    }
+    if(newPassword !== newPasswordConfirmation) {
+        return res.status(400).render("users/change-password", {
+            pageTitle: "Change Password", 
+            errorMessage: "The password does not match the confirmation",
+        });
+    }
+    user.password = newPassword;
+    await user.save(); // >>미들웨어에서 비번이 DB에 저장되기 전에 저장하는 코드를 작성했었음.
+    return res.redirect("/users/logout");
+};
+export const see = (req, res) => {
+    return res.redirect("/");
+};
+
+
+
+
+
 

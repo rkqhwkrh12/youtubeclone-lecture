@@ -1,5 +1,6 @@
 import express from "express";
-import {edit, remove, logout, see,startGithubLogin,finishGithubLogin} from "../controllers/userController";
+import { see,logout,startGithubLogin,finishGithubLogin, getEdit, postEdit, getChangePassword, postChangePassword} from "../controllers/userController";
+import { protectorMiddleware, publicOnlyMiddleware } from "../middlewares";
 // ../의 의미 >> 지금 현재 있는 라우터 파일에서 나가겠다.
 //user Router도 만들어 주구.
 const userRouter = express.Router();
@@ -12,13 +13,13 @@ const handleDelete = (req, res) => res.send("Delete User");
 */
 
 
-userRouter.get("/logout", logout);
-userRouter.get("/edit", edit);
-//edit이 주요작업이니까 get("", ); >> ""요기에 edit이 들어가면 되겠지?
-userRouter.get("/remove", remove);
-userRouter.get("/github/start", startGithubLogin);
-userRouter.get("/github/finish", finishGithubLogin);
-userRouter.get(":id", see);
+
+userRouter.get("/logout",protectorMiddleware ,logout);
+userRouter.route("/edit").all(protectorMiddleware).get(getEdit).post(postEdit);
+userRouter.get("/github/start",publicOnlyMiddleware , startGithubLogin);
+userRouter.get("/github/finish", publicOnlyMiddleware,finishGithubLogin);
+userRouter.route("/change-password").all(protectorMiddleware).get(getChangePassword).post(postChangePassword)
+userRouter.get("/:id", see);
 
 /*
 anotherRouter.get("/sexy", aaaa); >> 요런식으로 쓴다는 말은

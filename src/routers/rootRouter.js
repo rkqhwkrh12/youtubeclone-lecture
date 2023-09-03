@@ -3,6 +3,7 @@ import express from "express";
 //globalRouter에서 쓸 컨트롤러를 불러옴.
 import { getJoin, getLogin, logout, postJoin, postLogin } from "../controllers/userController";
 import { home , search } from "../controllers/videoController";
+import { publicOnlyMiddleware } from "../middlewares";
 //README에서 만든 라우터를 만드는 방법.
 //import { trending } from "../controllers/videoController";
 // >> 콘트롤러의 이름과 무조건 동일 해야 한다.
@@ -16,8 +17,8 @@ const rootRouter = express.Router();
 // >> app.get("/" , handleHome);
 
 rootRouter.get("/", home);
-rootRouter.route("/join").get(getJoin).post(postJoin);
-rootRouter.route("/login").get(getLogin).post(postLogin);
+rootRouter.route("/join").all(publicOnlyMiddleware).get(getJoin).post(postJoin);
+rootRouter.route("/login").all(publicOnlyMiddleware).get(getLogin).post(postLogin);
 //login을 하는 건 user니까 user controller에 함수를 작성해야 겠지?
 rootRouter.get("/logout", logout);
 rootRouter.get("/search", search);
