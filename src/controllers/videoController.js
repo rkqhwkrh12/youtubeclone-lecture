@@ -6,6 +6,7 @@ const edit = (req, res) => res.send("Edit");
 //export를 붙임으로써 한 파일이 여러개를 익스포트 할 수 있음.
 */
 import Video from "../models/Video";
+import User from "../models/User";
 
 /*Video.find().then(function (videos) {
     console.log(videos);
@@ -23,7 +24,7 @@ export const home = async (req, res) => {
 
 export const watch = async (req, res) => {
     const { id } = req.params;
-    const video = await Video.findById(id);
+    const video = await Video.findById(id).populate("owner"); //owner필드에 해당하는 사용자 정보를 가져오도록 populate 사용.
     //console.log(video);
     if(!video){
         return res.render("404", {pageTitle: "Video not found."});
@@ -63,26 +64,35 @@ export const  getupload = (req, res) => {
 }
 
 export const postupload = async (req, res) => {
+    const {
+        user: { _id} ,
+    } = req.session;
+    const {path: fileUrl} = req.file; //multer를 사용했을때 사용가능한거
     //post video array
     const { title, description, hashtags} = req.body;
     //real data  >> shema랑 동일한 형태로 짠다.
     try{
-        await Video.create({ //Video 모델에서 가지고 온 거
+        const newVideo = await Video.create({ //Video 모델에서 가지고 온 거
             title, // title: 5, >>요런식으로 보내줘도 mongoose가 int를 string으로 바꿔줌.
             description,
-   
+            fileUrl,
             //,로 구분된 hashtag들을 split함수를 써서 , 로 분리를 하고 만약#가 없는게 있다면,
             //자동으로 #를 붙여준다.
+            owner: _id,
             hashtags: Video.formatHashtags(hashtags),
            
         });
+        const user = await User.findById(_id);
+        //user에 있는 videos 배열에 영상을 업데이트 하는데 user이므로 session id를 이용한다
+        user.videos.push(newVideo); //배열에 푸시
+        user.save() // 저장
         //console.log(video); >> real data입력이 정상적으로 이루어 지고 있는지 확인하기 위한 코드
         //const dbVideo = await video.save(); //>> save는 promise를 return 해줌. save작업이 끝날 때까지 기다려줘야함.
                                             //데이터를 database에 전송하는 데 시간이 걸리기때문에 무조건 해줘야 함.
         //console.log(dbVideo);
         return res.redirect("/"); //홈으로 돌아감.
     } catch (error) {
-       
+        console.log(error);
         return res.status(400).render("upload", {pageTitle: "Upload Video", errorMessage: error._message,});
 
     }

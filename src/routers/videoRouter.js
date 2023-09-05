@@ -1,6 +1,6 @@
 import express from "express";
 import {watch, getEdit,deleteVideo, postEdit, getupload, postupload} from "../controllers/videoController";
-import { protectorMiddleware } from "../middlewares";
+import { protectorMiddleware, videoUpload} from "../middlewares";
 
 
 //video Router도 만들어 주구.
@@ -12,7 +12,7 @@ videoRouter.get("/:id([0-9a-f]{24})", watch); //>> 변수명에 비디오는 필
 //videoRouter.route("/:id(\\d+)").get(watch); 위에 코드랑 동일
 videoRouter.route("/:id([0-9a-f]{24})/edit").all(protectorMiddleware).get(getEdit).post(postEdit);
 videoRouter.route("/:id([0-9a-f]{24})/delete").all(protectorMiddleware).get(deleteVideo);
-videoRouter.route("/upload").all(protectorMiddleware).get(getupload).post(postupload);
+videoRouter.route("/upload").all(protectorMiddleware).get(getupload).post(videoUpload.single("video"),postupload);
 
 export default videoRouter;
 

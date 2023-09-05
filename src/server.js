@@ -41,9 +41,6 @@ app.use(
         secret: process.env.COOKIE_SECRET,
         resave: false,
         saveUninitialized: false, //log됐을 때만 세션이 생성되게
-        cookie: {
-            maxAge:20000,
-        },
         store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
 
     })

@@ -33,6 +33,16 @@ export const publicOnlyMiddleware = (req, res, next) => {
 };
 
 //file이 업로드되면 uploads 폴더에 경로가 저장됨.
-export const uploadFiles = multer({
-    dest: "uploads/"
+export const avartarUpload = multer({
+    dest: "uploads/avatars/",
+    limits: {
+        fileSize: 3000000,  //3MB로 제한
+    },
+});
+
+export const videoUpload = multer({
+    dest: "uploads/videos/",
+    limits: {
+        fieldSize : 10000000, //10MB로 제한
+    },
 });

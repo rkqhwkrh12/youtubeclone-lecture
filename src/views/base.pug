@@ -14,6 +14,9 @@ html(lang="ko")
                     if loggedIn
                         li  
                             a(href="/videos/upload") Upload Video
+                        //사용자가 로그인 되어 있다면 프로필을 볼 수 있는 href 생성.
+                        li 
+                            a(href=`/users/${loggedInUser._id}`) My profile 
                         li 
                             a(href="/users/edit") Edit Profile 
                         li 

@@ -1,7 +1,7 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
-
+import Video from "../models/Video";
 
 
 
@@ -255,8 +255,18 @@ export const postChangePassword = async (req, res) => {
     await user.save(); // >>미들웨어에서 비번이 DB에 저장되기 전에 저장하는 코드를 작성했었음.
     return res.redirect("/users/logout");
 };
-export const see = (req, res) => {
-    return res.redirect("/");
+
+//User profile에서 비디오를 편집하거나 삭제할 수 있게 하는 코드, 근데 본인인게 증명이 되야만 
+//비디오를 컨트롤할 수 있음.
+export const see = async (req, res) => {
+    const { id } = req.params; //session은 private하다면 사용자 프로필은 모두가 볼 수 있게 .
+    const user = await User.findById(id).populate("videos"); //유저에 해당하는 비디오들을 가지고 온다.
+    //url에 있는 id로 유저를 찾아봤는데 유저가 없다면?
+    if(!user) {
+        return res.status(404).render("404", {pageTitle: "User not found."});
+    }
+    const videos = await Video.find({owner: user._id}); //
+    return res.render("users/profile", {pageTitle: user.name, user, videos});
 };
 
 

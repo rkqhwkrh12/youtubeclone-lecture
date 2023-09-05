@@ -2,10 +2,15 @@ extends base.pug
 
 
 block content 
-        div 
+         video(src="/" + video.fileUrl, controls)
+         div 
            p=video.description
            small=video.createdAt 
-        a(href=`${video.id}/edit`) Edit Video &rarr;
-        br
-        a(href=`${video.id}/delete`) Delete Video &rarr;
-
+         div 
+            small Upload by 
+               a(href=`/users/${video.owner._id}`)=video.owner.name 
+         //비디오에 있는 id와 유저의 id가 같다면 영상을 편집하거나 삭제할 수 있게
+         if String(video.owner._id) === String(loggedInUser._id)
+            a(href=`${video.id}/edit`) Edit Video &rarr;
+            br
+            a(href=`${video.id}/delete`) Delete Video &rarr;

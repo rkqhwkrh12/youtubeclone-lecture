@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema({
     password:{type: String},
     name:{type: String, required:true},
     location: String,
+    //video에 저장된 비디오를 유저로 가지고 오는데 배열 형태로 가지고 온다.
+    videos:[{type : mongoose.Schema.Types.ObjectId, ref:"Video"}],
 });
 
 
