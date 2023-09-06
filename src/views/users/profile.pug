@@ -1,9 +1,8 @@
-//profile.pug가 users 폴더안에 있으므로 ..으로 이 폴더 밖에 있는 파일을 불러올 수 있음.
-extends ../base 
+extends ../base.pug
 include ../mixins/video 
 
 block content 
     each video in user.videos 
         +video(video)
     else 
-        li Sorry nothing found.
+        li Sorry nothing found. 

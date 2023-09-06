@@ -35,19 +35,35 @@ export const watch = async (req, res) => {
 
 export const getEdit = async (req, res) => {
     const { id } = req.params;
+    const {
+        user:{_id},
+    } = req.session;
     const video = await Video.findById(id);
     if(!video){
         return res.status(404).render("404", {pageTitle: "Video not found."});
+    }
+    //video를 업로드하게 되면 비번이 또 다시 해싱돼서 나중에 로그아웃후에 다시 로그인 할 때 문제가 생김. 
+    //이를 해결하기 위한 코드 >> video.owner가 가지고 있는 id와 user의 id를 이용.
+    if(String(video.owner) !== String(_id)) {
+        return res.status(403).redirect("/");
     }
     return res.render("edit", {pageTitle: `Editing: ${video.title}`, video});
 };
 
 export const postEdit = async (req, res) => {
+   
+    const {
+        user: {_id},
+    } = req.session;
     const { id } = req.params;
     const { title, description, hashtags} = req.body;
     const video = await Video.exists({ _id: id }); //대문자 Video는 model에서 가지고 온 거다ㅏ!
     if(!video){
         return res.status(404).render("404", {pageTitle: "Video not found."});
+    }
+     //edit으로 페이지를 이동할 때만 hashing을 고려해야 하는게 아니고 업로드 할 때도 고려를 해줘야 함
+    if(String(video.owner) !== String(_id)){
+        return res.status(403).redirect("/");
     }
     await Video.findByIdAndUpdate(id, {
         title, description, hashtags: Video.formatHashtags(hashtags),
@@ -84,7 +100,7 @@ export const postupload = async (req, res) => {
         });
         const user = await User.findById(_id);
         //user에 있는 videos 배열에 영상을 업데이트 하는데 user이므로 session id를 이용한다
-        user.videos.push(newVideo); //배열에 푸시
+        user.videos.push(newVideo._id); //배열에 푸시
         user.save() // 저장
         //console.log(video); >> real data입력이 정상적으로 이루어 지고 있는지 확인하기 위한 코드
         //const dbVideo = await video.save(); //>> save는 promise를 return 해줌. save작업이 끝날 때까지 기다려줘야함.
@@ -101,7 +117,17 @@ export const postupload = async (req, res) => {
 
 export const deleteVideo = async (req, res) => {
     const { id } = req.params;
-
+    const {
+        user: {_id},
+    } = req.session;
+    const video = await Video.findById(id);
+    if(!video) {
+        return res.status(404).render("404", {pageTitle: "Video nmot found."});
+    }
+    //삭제할때도 DB가 업데이드 되니까 hash가 hash 되지 않도록 조심.
+    if (String(video.owner) !== String(_id)) {
+        return res.status(403).redirect("/");
+      }
     await Video.findByIdAndDelete(id);
     //console.log(id);
     //delete video
