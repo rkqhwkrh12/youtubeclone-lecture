@@ -49,6 +49,7 @@ app.use(
 
 app.use(localsMiddleware); //무조건 session밑에 있어야 함.
 app.use("/uploads", express.static("uploads"));
+app.use("/static", express.static("assets"));
 app.use("/", rootRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);
