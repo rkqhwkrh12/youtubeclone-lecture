@@ -36,6 +36,7 @@ app.set("views", process.cwd() + "/src/views");
 app.use(logger);
 
 app.use(express.urlencoded({extended: true}));
+//github 로그인할 때 필요
 app.use(
     session({
         secret: process.env.COOKIE_SECRET,
