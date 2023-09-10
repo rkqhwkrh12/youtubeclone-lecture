@@ -1,7 +1,7 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
-import Video from "../models/Video";
+
 
 
 
@@ -260,7 +260,13 @@ export const postChangePassword = async (req, res) => {
 //비디오를 컨트롤할 수 있음.
 export const see = async (req, res) => {
     const { id } = req.params; //session은 private하다면 사용자 프로필은 모두가 볼 수 있게 .
-    const user = await User.findById(id).populate("videos"); //유저에 해당하는 비디오들을 가지고 온다.
+    const user = await User.findById(id).populate({
+        path: "videos",
+        populate: {
+            path:"owner",
+            model: "User",
+        },
+    }); //유저에 해당하는 비디오들을 가지고 온다.
     //url에 있는 id로 유저를 찾아봤는데 유저가 없다면?
     if(!user) {
         return res.status(404).render("404", {pageTitle: "User not found."});
