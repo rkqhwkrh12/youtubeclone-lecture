@@ -84,15 +84,17 @@ export const postupload = async (req, res) => {
     const {
         user: { _id} ,
     } = req.session;
-    const {path: fileUrl} = req.file; //multer를 사용했을때 사용가능한거
+    const { video, thumb } = req.files; //multer를 사용했을때 사용가능한거
     //post video array
+    console.log(video, thumb);
     const { title, description, hashtags} = req.body;
     //real data  >> shema랑 동일한 형태로 짠다.
     try{
         const newVideo = await Video.create({ //Video 모델에서 가지고 온 거
             title, // title: 5, >>요런식으로 보내줘도 mongoose가 int를 string으로 바꿔줌.
             description,
-            fileUrl,
+            fileUrl:video[0].path,
+            thumbUrl:thumb[0].path,
             //,로 구분된 hashtag들을 split함수를 써서 , 로 분리를 하고 만약#가 없는게 있다면,
             //자동으로 #를 붙여준다.
             owner: _id,

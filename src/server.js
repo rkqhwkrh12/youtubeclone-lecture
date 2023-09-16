@@ -55,7 +55,11 @@ app.use("/", rootRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);
 app.use("/api", apiRouter);
-
+app.use((req, res, next) => {
+    res.header("Cross-Origin-Embedder-Policy", "credentialless");
+    res.header("Cross-Origin-Opener-Policy", "same-origin");
+    next();
+});
 export default app
 
 

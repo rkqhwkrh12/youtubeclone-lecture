@@ -3,5 +3,6 @@
 /uploads
 /assets
 .DS_Store
-/assets/js/main.js
 /assets
+/assets/js/recorder.js
+/assets/js/main.js

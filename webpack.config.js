@@ -5,6 +5,7 @@ module.exports = {
     entry: {
         main: "./src/client/js/main.js",
         videoPlayer: "./src/client/js/videoPlayer.js",
+        recorder: "./src/client/js/recorder.js",
     },
     mode: "development",
     watch:true, //npm run asstes 할때 마다 삭제해줘야하는 번거로움을 해소하기 위해서 작성.
