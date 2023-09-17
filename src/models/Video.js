@@ -12,6 +12,7 @@ const videoSchema = new mongoose.Schema({
         views: {type: Number, default: 0, required: true},
         
     },
+    comments: [{ type: mongoose.Schema.Types.ObjectId, required: true, ref: "Comment" },],
     //User에 있는 id를 이용하여 다른 문서와의 연결을 위한 코드
     owner: {type: mongoose.Schema.Types.ObjectId, required: true, ref: "User"},
 });
