@@ -21,6 +21,7 @@ const handleSubmit = (event) => {
     },
     body: JSON.stringify({text}), //middleware에서 json을 설정해 주어야 사용가능.
   });
+  textarea.value = ""; //댓글을 제출하고 난 다음 빈 칸이 되게 설정.
 };
 
 //click으로 하면 button이 자동으로 제출해버려서 
