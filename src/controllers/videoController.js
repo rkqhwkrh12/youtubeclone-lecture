@@ -169,4 +169,12 @@ export const registerView = async(req, res) => {
     return res.sendStatus(200);
 };
 
+//로그인 되었을 때 입력한 댓글을 컨트롤 하기 위한 코드
+//videoId을 이용한다. >> watch.pug에서 data-id를 설정한 것처럼?
+export const createComment = (req, res) => {
+    console.log(req.params);
+    console.log(req.body);
+    console.log(req.body.text, req.body.rating);
+    return res.end();
+  };
 

@@ -37,6 +37,7 @@ app.set("views", process.cwd() + "/src/views");
 app.use(logger);
 
 app.use(express.urlencoded({extended: true}));
+app.use(express.json()); //요게 있어야 입력받은 댓글 또는 별점 등을 object 형태로 받아 올 수 있음.
 //github 로그인할 때 필요
 app.use(
     session({
