@@ -6,7 +6,9 @@ const edit = (req, res) => res.send("Edit");
 //export를 붙임으로써 한 파일이 여러개를 익스포트 할 수 있음.
 */
 import Video from "../models/Video";
+import Comment from "../models/Comment";
 import User from "../models/User";
+import { async } from "regenerator-runtime";
 
 /*Video.find().then(function (videos) {
     console.log(videos);
@@ -171,10 +173,25 @@ export const registerView = async(req, res) => {
 
 //로그인 되었을 때 입력한 댓글을 컨트롤 하기 위한 코드
 //videoId을 이용한다. >> watch.pug에서 data-id를 설정한 것처럼?
-export const createComment = (req, res) => {
-    console.log(req.params);
-    console.log(req.body);
-    console.log(req.body.text, req.body.rating);
-    return res.end();
-  };
+export const createComment = async (req, res) => {
+    //comments의 model을 보고 아래와 같이 작성.
+    const {
+        session: { user },
+        body: { text },
+        params: { id },
+
+    } = req;
+    const video = await Video.findById(id);
+    if (!video) {
+        //video가 없다면 에러를 출력하고 끝냄.
+        return res.sendStatus(404);
+    }
+    const comment = await Comment.create({
+        text,
+        owner: user._id,
+        video: id,
+    });
+    return res.sendStatus(201);
+
+};
 
