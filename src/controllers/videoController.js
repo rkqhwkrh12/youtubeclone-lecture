@@ -46,6 +46,7 @@ export const getEdit = async (req, res) => {
     //video를 업로드하게 되면 비번이 또 다시 해싱돼서 나중에 로그아웃후에 다시 로그인 할 때 문제가 생김. 
     //이를 해결하기 위한 코드 >> video.owner가 가지고 있는 id와 user의 id를 이용.
     if(String(video.owner) !== String(_id)) {
+        req.flash("error", "Not authorized");
         return res.status(403).redirect("/");
     }
     return res.render("edit", {pageTitle: `Editing: ${video.title}`, video});
@@ -58,17 +59,19 @@ export const postEdit = async (req, res) => {
     } = req.session;
     const { id } = req.params;
     const { title, description, hashtags} = req.body;
-    const video = await Video.exists({ _id: id }); //대문자 Video는 model에서 가지고 온 거다ㅏ!
+    const video = await Video.findById(_id); //대문자 Video는 model에서 가지고 온 거다ㅏ!
     if(!video){
         return res.status(404).render("404", {pageTitle: "Video not found."});
     }
      //edit으로 페이지를 이동할 때만 hashing을 고려해야 하는게 아니고 업로드 할 때도 고려를 해줘야 함
     if(String(video.owner) !== String(_id)){
+        req.flash("error", "You are not the the owner of the video.");
         return res.status(403).redirect("/");
     }
     await Video.findByIdAndUpdate(id, {
         title, description, hashtags: Video.formatHashtags(hashtags),
-    })
+    });
+    req.flash("success", "Changes saved.");
     return res.redirect(`/videos/${id}`);
 
 };
@@ -86,7 +89,7 @@ export const postupload = async (req, res) => {
     } = req.session;
     const { video, thumb } = req.files; //multer를 사용했을때 사용가능한거
     //post video array
-    console.log(video, thumb);
+    //console.log(video, thumb);
     const { title, description, hashtags} = req.body;
     //real data  >> shema랑 동일한 형태로 짠다.
     try{
