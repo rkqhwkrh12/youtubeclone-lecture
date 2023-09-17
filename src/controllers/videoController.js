@@ -27,7 +27,7 @@ export const home = async (req, res) => {
 
 export const watch = async (req, res) => {
     const { id } = req.params;
-    const video = await Video.findById(id).populate("owner"); //owner필드에 해당하는 사용자 정보를 가져오도록 populate 사용.
+    const video = await Video.findById(id).populate("owner").populate("comments"); //owner필드에 해당하는 사용자 정보를 가져오도록 populate 사용.
     //console.log(video);
     if(!video){
         return res.render("404", {pageTitle: "Video not found."});
@@ -174,24 +174,28 @@ export const registerView = async(req, res) => {
 //로그인 되었을 때 입력한 댓글을 컨트롤 하기 위한 코드
 //videoId을 이용한다. >> watch.pug에서 data-id를 설정한 것처럼?
 export const createComment = async (req, res) => {
-    //comments의 model을 보고 아래와 같이 작성.
+    
+     //comments의 model을 보고 아래와 같이 작성.
     const {
-        session: { user },
-        body: { text },
-        params: { id },
-
+      session: { user },
+      body: { text },
+      params: { id },
     } = req;
+    //populate 메서드를 사용하여 Video 모델의 owner 필드를 채우려고 함.
+    //이는 비디오 문서에 저장된 소유자 정보를 가져와서 해당 정보를 owner 필드에 채우는 것을 나타냄
+    //.populate("comments") >> Video 모델의 comments 필드를 채우려는 것으로, 해당 비디오에 연결된
+    //댓글 정보를 가져와서 comments 필드에 채우는 역할을 함.
     const video = await Video.findById(id);
     if (!video) {
-        //video가 없다면 에러를 출력하고 끝냄.
-        return res.sendStatus(404);
+    //video가 없다면 에러를 출력하고 끝냄.
+      return res.sendStatus(404);
     }
     const comment = await Comment.create({
-        text,
-        owner: user._id,
-        video: id,
+      text,
+      owner: user._id,
+      video: id,
     });
-    return res.sendStatus(201);
-
-};
-
+    video.comments.push(comment._id);  // 작성한 댓글을 comments 배열에 저장하기 위함.
+    video.save();
+    return res.status(201).json({ newCommentId: comment._id });
+  };

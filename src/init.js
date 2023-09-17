@@ -1,8 +1,9 @@
 import "dotenv/config"; //이게 젤 처음에 와야 됨.
 import "./db";
+import "./models/Comment";
 import "./models/Video";
 import "./models/User";
-import "./models/Comment";
+
 import app from "./server";
 const PORT = 4000;
 
