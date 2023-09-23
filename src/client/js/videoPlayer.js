@@ -108,6 +108,7 @@ const handleEnded = () => {
   const { id } = videoContainer.dataset;
   fetch(`/api/videos/${id}/view`, {method: "POST",});
 };
+
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMuteClick);
 volumeRange.addEventListener("input", handleVolumeChange); //input >> 비디오의 재생위치에 해당하는 값을 계속 알려줌
