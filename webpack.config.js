@@ -9,9 +9,7 @@ module.exports = {
         videoPlayer: BASE_JS + "videoPlayer.js",
         recorder: BASE_JS + "recorder.js",
         commentSection: BASE_JS + "commentSection.js",
-    },
-    mode: "development",
-    watch:true, //npm run asstes 할때 마다 삭제해줘야하는 번거로움을 해소하기 위해서 작성.
+    }, //npm run asstes 할때 마다 삭제해줘야하는 번거로움을 해소하기 위해서 작성.
     plugins: [
         new MiniCssExtractPlugin({
           filename: "css/styles.css", //styles.css를 다른 파일에 생성.

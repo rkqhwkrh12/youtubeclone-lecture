@@ -7,8 +7,11 @@
     "url": "git+https://github.com/rkqhwkrh12/youtubeclone-lecture.git"
   },
   "scripts": {
+    "start": "node build/init.js",
+    "build:server": "babel src -d build",
+    "build:assets": "webpack --mode=production",
     "dev:server": "nodemon",
-    "dev:assets": "webpack"
+    "dev:assets": "webpack --mode=development -w"
   },
   "author": "bong",
   "license": "MIT",
@@ -30,7 +33,8 @@
     "regenerator-runtime": "^0.14.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.11",
+    "@babel/cli": "^7.22.15",
+    "@babel/core": "^7.22.20",
     "@babel/node": "^7.22.10",
     "@babel/preset-env": "^7.22.10",
     "babel-loader": "^9.1.3",

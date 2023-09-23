@@ -1,5 +1,11 @@
+import { async } from "regenerator-runtime";
+
 const videoContainer = document.getElementById("videoContainer");
 const form = document.getElementById("commentForm");
+//comment삭제를 위한 코드
+const videoComments = document.querySelector(".video__comments li");
+//달리는 댓글 모두에 대해서 컨트롤 하기 위해서 queryselectorAll 사용.
+const deletIcon = document.querySelectorAll(".delete_icon");
 
 const addComment = (text, id) => {
   const videoComments = document.querySelector(".video__comments ul");
@@ -10,12 +16,15 @@ const addComment = (text, id) => {
   icon.className = "fas fa-comment";
   const span = document.createElement("span");
   span.innerText = ` ${text}`;
-  const span2 = document.createElement("span");
-  span2.innerText = "❌";
+  const deletIcon = document.createElement("span");
+  deletIcon.innerText = "❌";
+  deletIcon.className = "delete_icon";
   newComment.appendChild(icon);
   newComment.appendChild(span);
-  newComment.appendChild(span2);
+  newComment.appendChild(deletIcon);
   videoComments.prepend(newComment);
+
+  deletIcon.addEventListener("click", handleDelete);
 };
 
 //여기서 부터 시작
@@ -41,6 +50,31 @@ const handleSubmit = async (event) => {
   }
 };
 
+const handleDelete = async (event) => {
+  const deleteComment = event.target.parentElement;
+
+  const {
+    dataset: { id },
+  } = event.target.parentElement;
+
+  const videoId = videoContainer.dataset.id;
+
+  const response = await fetch(`/api/videos/${videoId}/comment/delete`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ commentId: id }),
+  });
+
+  if (response.status === 200) {
+    deleteComment.remove();
+  }
+};
 if (form) {
   form.addEventListener("submit", handleSubmit);
+}
+
+if (deletIcon) {
+  deletIcon.forEach((icon) => icon.addEventListener("click", handleDelete));
 }
