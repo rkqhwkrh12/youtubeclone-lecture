@@ -9,12 +9,17 @@ const s3 = new aws.S3({
     }
 });
 
-const multerUploader = multerS3({
+const s3ImageUploader = multerS3({
     s3:s3,
-    bucket: 'bongbongb',
+    bucket: 'bongbongb/images',
     acl: 'public-read',
 });
 
+const s3VideoUploader = multerS3({
+    s3:s3,
+    bucket: 'bongbongb/videos',
+    acl: 'public-read',
+});
 export const localsMiddleware = (req, res, next) => {
 
     //res.locals를 사용하면 pug에서 바로 사용할 수 있다. >> 개꿀임.
@@ -54,7 +59,7 @@ export const avartarUpload = multer({
     limits: {
         fileSize: 3000000,  //3MB로 제한
     }, 
-    storage: multerUploader,
+    storage: s3ImageUploader,
 });
 
 export const videoUpload = multer({
@@ -62,5 +67,5 @@ export const videoUpload = multer({
     limits: {
         fieldSize : 10000000, //10MB로 제한
     },
-    storage: multerUploader,
+    storage: s3VideoUploader,
 });
