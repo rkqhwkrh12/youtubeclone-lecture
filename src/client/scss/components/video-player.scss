@@ -32,6 +32,13 @@
         justify-content: space-around;
         .videoControls__playBtn {  
           margin: 0px 15px;
+          color: white;
+        }
+        .fas.fa-play{
+          color: white;
+        }
+        .videoControls__time{
+          color:  white;
         }
         .videoControls__time {
           font-size: 12px;
@@ -44,6 +51,7 @@
           margin-left: 10px;
           i {
             font-size: 20px;
+            color: white;
           }
         }
       }

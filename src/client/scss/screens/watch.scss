@@ -26,10 +26,40 @@
     margin: 0 auto;
     margin-top: 20px;
     .video__comment {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding: 10px;
       border-radius: 9999px;
-      background-color: white;
+      background-color: #dde9ea;
       color: black;
       margin-bottom: 10px;
     }
+    .video__comment-form{
+      textarea {
+        width: 40%;
+        height: 50px;
+      }
+      background-color: #d6e6f9;
+    }
+}
+.video__add-comments{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .video__comment-form{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    textarea {
+      border-radius: 10px;
+      border: none;
+      width: 700px;
+      height: 70px;
+    }
+    button {
+      background-color: #f6f8fa;
+      color: black;
+    }
   }
+}
