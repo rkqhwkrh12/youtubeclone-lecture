@@ -21,17 +21,16 @@ block content
                     i.fas.fa-expand
 
     div.video__data
-        p.video__title=video.title
-        small.video__owner Uploaded by 
-            a(href=`/users/${video.owner._id}`)=video.owner.name
-        small.video__createdAt=new Date(video.createdAt).toLocaleDateString("ko-kr", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})
-        if String(video.owner._id) === String(loggedInUser._id)
-
-            a(href=`${video.id}/edit`) Edit Video &rarr;
-
-            br
-
-            a(href=`${video.id}/delete`) Delete Video &rarr;
+        div.layout_video_set
+            p.video__title=video.title
+            small.video__owner Uploaded by 
+                a(href=`/users/${video.owner._id}`)=video.owner.name
+        div.layout_video_set2
+            small.video__createdAt=new Date(video.createdAt).toLocaleDateString("ko-kr", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})
+            if String(video.owner._id) === String(loggedInUser._id)
+                a(href=`${video.id}/edit`) Edit Video &rarr;
+                br
+                a(href=`${video.id}/delete`) Delete Video &rarr;
 
     if loggedIn
 

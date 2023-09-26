@@ -63,3 +63,17 @@
     }
   }
 }
+.layout_video_set{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  .layout_video_set{
+    display: inline;
+  }
+  .layout_video_set2{
+    display: inline;
+  }
+
+}
+ 
