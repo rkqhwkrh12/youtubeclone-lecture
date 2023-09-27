@@ -20,7 +20,7 @@ header
                         else    
                             if loggedInUser.socialOnly
                                 img.header__avatar(src=loggedInUser.avatarUrl)
-                            else if loggedInUser.socialOnly.includes("github")
+                            else
                                 img.header__avatar(src=loggedInUser.avatarUrl)
             else 
                 li 
