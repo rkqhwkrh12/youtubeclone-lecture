@@ -28,7 +28,7 @@ export const localsMiddleware = (req, res, next) => {
     res.locals.siteName ="Wetube";
     res.locals.loggedInUser = req.session.user || {}; //user가 null 값 일수도 있음. 
     //console.log(res.locals); 
-    res.locals.isProduction = isProduction;
+    res.locals.isProduction = Boolean(req.session.isProduction);
     next();
 
 }

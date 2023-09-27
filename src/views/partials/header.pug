@@ -15,8 +15,7 @@ header
                     a(href="/users/logout") Log Out 
                 li
                     a(href=`/users/${loggedInUser._id}`)
-                        div.size_of_image
-
+                        div
                             if(!isProduction)
                                 img(src="/"+loggedInUser.avartarUrl crossorigin).header__avatar
                             else 
