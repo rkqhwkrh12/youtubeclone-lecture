@@ -15,10 +15,11 @@ header
                     a(href="/users/logout") Log Out 
                 li
                     a(href=`/users/${loggedInUser._id}`)
-                        if(!isProduction)
-                            img(src = "/" + loggedInUser.avartarUrl crossorigin).header__avatar
-                        else 
-                            img(src = loggedInUser.avartarUrl crossorigin).header__avatar
+                        div
+                            if(!isProduction)
+                                img(src="/" + users.avartarUrl crossorigin).header__avatar
+                            else 
+                                img(src=users.avartarUrl crossorigin).header__avatar
             else 
                 li 
                     a(href="/login") Login
