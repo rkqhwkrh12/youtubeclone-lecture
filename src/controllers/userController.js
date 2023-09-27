@@ -186,6 +186,7 @@ export const postEdit = async (req, res) => {
             name, email, username, location
         },
         file, //file이 undefine일수돌 잇음
+
     } =  req;
     //form에서 가져온 email, username과 DB에 저장된 email과 username을 비교하여 같은게 있으면 변경이 안되고
     //errorMessage가 나오게 한다.
