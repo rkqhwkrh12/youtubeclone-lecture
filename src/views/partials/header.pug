@@ -16,11 +16,11 @@ header
                 li
                     a(href=`/users/${loggedInUser._id}`)
                         div.size_of_image
-                        
+
                             if(!isProduction)
-                                img(src="/"+user.avartarUrl crossorigin).header__avatar
+                                img(src="/"+loggedInUser.avartarUrl crossorigin).header__avatar
                             else 
-                                img(src=user.avartarUrl crossorigin).header__avatar
+                                img(src=loggedInUser.avartarUrl crossorigin).header__avatar
 
             else 
                 li 
