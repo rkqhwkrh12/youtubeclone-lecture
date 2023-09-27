@@ -18,15 +18,13 @@ header
                         if loggedInUser.avatarUrl === ""
                             span 😀
                         else
-                            if loggedInUser.avatarUrl 
-                                if loggedInUser.avartarUrl.includes("github")
-                                    img.header__avatar(src=loggedInUser.avatarUrl)
-                                else 
-                                    img.header__avatar(src=loggedInUser.avatarUrl)      
+                            if loggedInUser.avatarUrl.includes("github")
+                                img.header__avatar(src=loggedInUser.avatarUrl)
+                            else 
+                                img.header__avatar(src="/" + loggedInUser.avatarUrl)      
             else 
                 li 
                     a(href="/login") Login
                 li 
                     a(href="/join").header__btn Join 
-            li 
-                a(href="/search") Search 
+            
