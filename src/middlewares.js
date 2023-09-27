@@ -8,7 +8,7 @@ const s3 = new aws.S3({
         secretAccessKey: process.env.AWS_SECRET,
     }
 });
-const isProduction = process.env.NODE_ENV === "production";
+
 const s3ImageUploader = multerS3({
     s3:s3,
     bucket: 'bongbongb/images',
@@ -28,7 +28,7 @@ export const localsMiddleware = (req, res, next) => {
     res.locals.siteName ="Wetube";
     res.locals.loggedInUser = req.session.user || {}; //user가 null 값 일수도 있음. 
     //console.log(res.locals); 
-    res.locals.isProduction = Boolean(req.session.isProduction);
+    
     next();
 
 }
@@ -61,7 +61,7 @@ export const avartarUpload = multer({
     limits: {
         fileSize: 3000000,  //3MB로 제한
     }, 
-    storage: isProduction ? s3ImageUploader : undefined,
+    storage: s3ImageUploader ,
 });
 
 export const videoUpload = multer({
@@ -69,5 +69,5 @@ export const videoUpload = multer({
     limits: {
         fieldSize : 10000000, //10MB로 제한
     },
-    storage: isProduction ? s3VideoUploader : undefined,
+    storage: s3VideoUploader ,
 });
