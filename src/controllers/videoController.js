@@ -94,12 +94,13 @@ export const postupload = async (req, res) => {
     //console.log(video, thumb);
     const { title, description, hashtags} = req.body;
     //real data  >> shema랑 동일한 형태로 짠다.
+    const isProduction = process.env.NODE_ENV === "production";
     try{
         const newVideo = await Video.create({ //Video 모델에서 가지고 온 거
             title, // title: 5, >>요런식으로 보내줘도 mongoose가 int를 string으로 바꿔줌.
             description,
-            fileUrl:video[0].location,
-            thumbUrl:thumb[0].location,
+            fileUrl:isProduction ? video[0].location : video[0].path,
+            thumbUrl:isProduction ? thumb[0].location : video[0].path,
             //,로 구분된 hashtag들을 split함수를 써서 , 로 분리를 하고 만약#가 없는게 있다면,
             //자동으로 #를 붙여준다.
             owner: _id,

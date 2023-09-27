@@ -27,6 +27,7 @@ export const localsMiddleware = (req, res, next) => {
     res.locals.siteName ="Wetube";
     res.locals.loggedInUser = req.session.user || {}; //user가 null 값 일수도 있음. 
     //console.log(res.locals); 
+    res.locals.isProduction = isProduction;
     next();
 
 }
@@ -59,7 +60,7 @@ export const avartarUpload = multer({
     limits: {
         fileSize: 3000000,  //3MB로 제한
     }, 
-    storage: s3ImageUploader,
+    storage: isProduction ? s3ImageUploader : undefined,
 });
 
 export const videoUpload = multer({
@@ -67,5 +68,5 @@ export const videoUpload = multer({
     limits: {
         fieldSize : 10000000, //10MB로 제한
     },
-    storage: s3VideoUploader,
+    storage: isProduction ? s3VideoUploader : undefined,
 });

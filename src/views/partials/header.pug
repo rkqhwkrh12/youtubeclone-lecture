@@ -15,13 +15,10 @@ header
                     a(href="/users/logout") Log Out 
                 li
                     a(href=`/users/${loggedInUser._id}`)
-                        if loggedInUser.avartarUrl === ""
-                            span 😁
-                        else    
-                            if loggedInUser.socialOnly.toString().includes("github") 
-                                img(src=user.avartarUrl crossorigin ).header__avatar
-                            else
-                                img(src= "/" + user.avartarUrl crossorigin).header__avatar
+                        if(!isProduction)
+                            img(src = "/" + user.avartarUrl crossorigin).header__avatar
+                        else 
+                            img(src = user.avartarUrl crossorigin).header__avatar
             else 
                 li 
                     a(href="/login") Login

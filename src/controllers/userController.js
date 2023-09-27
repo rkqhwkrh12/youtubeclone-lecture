@@ -191,6 +191,7 @@ export const postEdit = async (req, res) => {
     //form에서 가져온 email, username과 DB에 저장된 email과 username을 비교하여 같은게 있으면 변경이 안되고
     //errorMessage가 나오게 한다.
     const currentUser = req.session.user;
+
     if((currentUser.email !== email) && (await User.exists({email}))){
         return res.status(400).render("edit-profile", {
             pageTitle,
@@ -203,9 +204,10 @@ export const postEdit = async (req, res) => {
             errorMessage: "This username is already taken."
         });
     }
+    const isProduction = process.env.NODE_ENV === "production";
     const updateUser = await User.findByIdAndUpdate(_id,
         {
-            avartarUrl: file ? file.location : avartarUrl,
+            avartarUrl: file ? (isProduction ? file.location : file.path) : avartarUrl,
             name,
             email,
             username,
