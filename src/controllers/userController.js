@@ -63,7 +63,7 @@ export const postLogin = async (req, res) => {
         username,
         socialOnly: false //email로 로그인 했느지 안했는지를 알기 위해서
     });
-    console.log(user);
+    //console.log(user);
     //로그인 정보가 없으면 다시 로그인 하라고 로그인 페이지를 렌더링 해줘야함.
     if(!user) {
         return res.status(400).render("login", {
@@ -207,9 +207,10 @@ export const postEdit = async (req, res) => {
         });
     }
     
+    const isCould = process.env.NODE_ENV === "production";
     const updateUser = await User.findByIdAndUpdate(_id,
         {
-            avartarUrl: file ? file.location : avartarUrl,
+            avartarUrl: file ? (isCould ? file.location : file.path) : avartarUrl,
             name,
             email,
             username,

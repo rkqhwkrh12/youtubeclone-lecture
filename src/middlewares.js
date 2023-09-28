@@ -28,7 +28,7 @@ export const localsMiddleware = (req, res, next) => {
     res.locals.siteName ="Wetube";
     res.locals.loggedInUser = req.session.user || {}; //user가 null 값 일수도 있음. 
     //console.log(res.locals); 
-    
+    res.locals.isCould = isCould;
     next();
 
 }
@@ -55,13 +55,15 @@ export const publicOnlyMiddleware = (req, res, next) => {
     }
 };
 
+
+const isCould = process.env.NODE_ENV === "production";
 //file이 업로드되면 uploads 폴더에 경로가 저장됨.
 export const avartarUpload = multer({
     dest: "uploads/avatars/",
     limits: {
         fileSize: 3000000,  //3MB로 제한
     }, 
-    storage: s3ImageUploader ,
+    storage: isCould ? s3ImageUploader : undefined,
 });
 
 export const videoUpload = multer({
@@ -69,5 +71,5 @@ export const videoUpload = multer({
     limits: {
         fieldSize : 10000000, //10MB로 제한
     },
-    storage: s3VideoUploader ,
+    storage: isCould ? s3VideoUploader : undefined,
 });
