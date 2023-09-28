@@ -41,15 +41,13 @@
   justify-content: space-between;
   align-items: center;
   .video__comment-form{
-    width: 1200px;
-    height: 300px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     textarea {
       border-radius: 10px;
       border: none;
-      width: 100%;
+      width: 900px;
       height: 70px;
       background-color: none;
       margin-right: 10px;
