@@ -31,27 +31,19 @@
       align-items: center;
       padding: 10px;
       border-radius: 9999px;
-      background-color: #dde9ea;
       color: black;
       margin-bottom: 10px;
+      text-decoration: underline;
     }
 }
 .video__add-comments{
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   .video__comment-form{
+    width: 1200px;
+    height: 100px;
     display: flex;
-    justify-content: space-between;
+
     align-items: center;
-    textarea {
-      border-radius: 10px;
-      border: none;
-      width: 900px;
-      height: 70px;
-      background-color: none;
-      margin-right: 10px;
-    }
     button {
       display: inline-block;
       outline: 0;
@@ -91,4 +83,11 @@
 .video__size{
   width: 1200px;
   height: 700px;
+}
+.textArea__size{
+  display: inline-block;
+  width: 100%;
+  height: 30px;
+  margin-right: 5px;
+  resize: none
 }
