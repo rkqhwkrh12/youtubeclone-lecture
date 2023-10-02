@@ -48,7 +48,11 @@ app.use(
 
     })
 );
-
+app.use((req, res, next) => {
+    res.header("Cross-Origin-Embedder-Policy", "credentialless");
+    res.header("Cross-Origin-Opener-Policy", "same-origin");
+    next();
+});
 app.use(flash());
 app.use(localsMiddleware); //무조건 session밑에 있어야 함.
 app.use("/uploads", express.static("uploads"));
@@ -57,11 +61,7 @@ app.use("/", rootRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);
 app.use("/api", apiRouter);
-app.use((req, res, next) => {
-    res.header("Cross-Origin-Embedder-Policy", "credentialless");
-    res.header("Cross-Origin-Opener-Policy", "same-origin");
-    next();
-});
+
 export default app
 
 
